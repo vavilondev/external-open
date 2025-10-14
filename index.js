@@ -19,24 +19,7 @@ const html = `<!doctype html>
 
   <script>
     (function() {
-
-      // helper to build scheme and attempt navigation
-      function attemptXSafari(targetUrl) {
-        try {
-          // scheme as requested
-          const scheme = 'x-safari-' + encodeURIComponent(targetUrl);
-          // try setting location.href to the custom scheme
-          window.location.href = scheme;
-        } catch (err) {
-          console.error('redirect error', err);
-        }
-      }
-
-      attemptXSafari('${TARGET}');
-      // button fallback for manual trigger
-    //   document.getElementById('openBtn').addEventListener('click', function(){
-    //     attemptXSafari('${TARGET}');
-    //   }, false);
+        window.location.href = '${TARGET}';
     })();
   </script>
 </body>
