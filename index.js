@@ -1,10 +1,27 @@
+// index-express.js
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const FINAL = 'https://claritycheck.com/';
 
-app.get('/go', (req, res) => {
-  const finalUrl = 'https://claritycheck.com/'; // сюда твоя финальная ссылка
-  res.redirect(302, finalUrl);
+app.get('/r1', (req, res) => {
+  res.set({
+    'Content-Length': '0',
+    'Cache-Control': 'no-store',
+    'Pragma': 'no-cache',
+    'Connection': 'close'
+  });
+  return res.redirect(302, `/r2`);
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.get('/r2', (req, res) => {
+  res.set({
+    'Content-Length': '0',
+    'Cache-Control': 'no-store',
+    'Pragma': 'no-cache',
+    'Connection': 'close'
+  });
+  return res.redirect(302, FINAL);
+});
+
+app.get('/', (req, res) => res.send('ok'));
+app.listen(process.env.PORT || 3000);
