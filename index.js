@@ -1,40 +1,48 @@
-// index.js
-const express = require('express');
-const app = express();
+const http = require('http');
+const url = require('url');
+
 const PORT = process.env.PORT || 3000;
 
-// финальный URL — тот, куда нужно отправить
+// Куда будет финальный редирект
 const FINAL_URL = 'https://claritycheck.com/';
 
-// 🔹 1-й редирект: на поддомен (если он у тебя есть)
-app.get('/r1', (req, res) => {
-  res.set({
-    'Content-Length': '0',
-    'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-    'Pragma': 'no-cache',
-    'Connection': 'close',
-    'Referrer-Policy': 'no-referrer',
-    'X-Content-Type-Options': 'nosniff'
-  });
+// Заголовки, которые помогают Instagram WebView "вылететь" в Safari
+const REDIRECT_HEADERS = {
+  'Content-Length': '0',
+  'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+  'Pragma': 'no-cache',
+  'Connection': 'close',
+  'Referrer-Policy': 'no-referrer',
+  'X-Content-Type-Options': 'nosniff'
+};
 
-  // если у тебя нет поддомена — можно сразу на /r2
-  res.redirect(302, '/r2');
+const server = http.createServer((req, res) => {
+  const path = url.parse(req.url).pathname;
+
+  // Первый редирект: на поддомен (или просто другой домен)
+  if (path === '/r1') {
+    const nextHop = 'https://external-open.onrender.com/r2'; // ← обязательно абсолютный URL!
+    res.writeHead(302, {
+      'Location': nextHop,
+      ...REDIRECT_HEADERS
+    });
+    return res.end();
+  }
+
+  // Второй редирект: на claritycheck.com
+  if (path === '/r2') {
+    res.writeHead(302, {
+      'Location': FINAL_URL,
+      ...REDIRECT_HEADERS
+    });
+    return res.end();
+  }
+
+  // Любой другой путь — просто сообщение
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('OK — use /r1 or /r2 for redirect');
 });
 
-// 🔹 2-й редирект: финальный переход (может вытолкнуть Safari)
-app.get('/r2', (req, res) => {
-  res.set({
-    'Content-Length': '0',
-    'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-    'Pragma': 'no-cache',
-    'Connection': 'close',
-    'Referrer-Policy': 'no-referrer',
-    'X-Content-Type-Options': 'nosniff'
-  });
-  res.redirect(302, FINAL_URL);
+server.listen(PORT, () => {
+  console.log(`Redirect server running on http://localhost:${PORT}`);
 });
-
-// корневой путь (для проверки)
-app.get('/', (_, res) => res.send('OK — use /r1 to redirect'));
-
-app.listen(PORT, () => console.log(`Redirect server running on port ${PORT}`));
