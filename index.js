@@ -21,18 +21,9 @@ const server = http.createServer((req, res) => {
 
   // Первый редирект: на поддомен (или просто другой домен)
   if (path === '/r1') {
-    const nextHop = 'https://external-open.onrender.com/r2'; // ← обязательно абсолютный URL!
+    const nextHop = FINAL_URL; // ← обязательно абсолютный URL!
     res.writeHead(302, {
       'Location': nextHop,
-      ...REDIRECT_HEADERS
-    });
-    return res.end();
-  }
-
-  // Второй редирект: на claritycheck.com
-  if (path === '/r2') {
-    res.writeHead(302, {
-      'Location': FINAL_URL,
       ...REDIRECT_HEADERS
     });
     return res.end();
