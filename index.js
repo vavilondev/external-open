@@ -21,8 +21,6 @@ const html = `<!doctype html>
     (function() {
       // show UA and platform in alerts (as requested)
       try {
-        alert('User-Agent: ' + navigator.userAgent);
-        alert('Platform: ' + navigator.platform);
       } catch (e) {
         console.error(e);
       }
