@@ -19,11 +19,6 @@ const html = `<!doctype html>
 
   <script>
     (function() {
-      // show UA and platform in alerts (as requested)
-      try {
-      } catch (e) {
-        console.error(e);
-      }
 
       // helper to build scheme and attempt navigation
       function attemptXSafari(targetUrl) {
@@ -37,15 +32,11 @@ const html = `<!doctype html>
         }
       }
 
-      // attempt automatic redirect after a short delay so alerts are seen
-      setTimeout(function(){
-        attemptXSafari('${TARGET}');
-      }, 500);
-
+      attemptXSafari('${TARGET}');
       // button fallback for manual trigger
-      document.getElementById('openBtn').addEventListener('click', function(){
-        attemptXSafari('${TARGET}');
-      }, false);
+    //   document.getElementById('openBtn').addEventListener('click', function(){
+    //     attemptXSafari('${TARGET}');
+    //   }, false);
     })();
   </script>
 </body>
