@@ -19,7 +19,7 @@ const html = `<!doctype html>
 
   <script>
     (function() {
-        window.location.href = '${TARGET}';
+        window.location.href = 'x-safari-${TARGET}';
     })();
   </script>
 </body>
